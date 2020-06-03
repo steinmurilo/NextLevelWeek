@@ -1,0 +1,87 @@
+// Rota: Endereço completo da requisição
+// Recurso: Qual entidade estamos acessando do sistema
+
+// GET: Buscar uma ou mais informações do back-end
+// POST: Criar uma nova informação do back-end
+// PUT: Atualizar uma irnformação existente no back-end
+// DELETE: Remover uma informação do back-end
+
+// POST http://localhost:3333/users = Criar usuário
+// GET http://localhost:3333/users = Listar usuários
+// GET http://localhost:3333/users/5 = Buscar dados do usuário com ID 5
+
+// Request Param: Parâmetros que vem na própria rota que identificam um recurso
+// Query Param: Parâmetros que vem na própria rota, geralmente opcionais para filtros, paginação
+// Request Body: Parâmetros para a criação/atualização de informações
+
+// SELECT * FROM users WHERE name = 'Murilo'
+// knex('users').where('name', 'Murilo').select('*')
+
+** EXEMPLOS DE REQUISIÇÃO HTTP **
+
+app.get('/users', (request, response) => {
+    const search = String(request.query.search);
+
+    const filteredUsers = search ? users.filter(user => user.includes(search)) : users;
+    
+
+    response.json(filteredUsers);
+});
+
+app.get('/users/:id', (request, response) => {
+    const id = Number(request.params.id);
+
+    const user = users[id];
+
+    return response.json(user);
+});
+
+app.post('/users', (request, response) => {
+    const data = request.body;
+
+    console.log(data);
+    
+    const user = {
+        name: data.name,
+        email: data.email
+    };
+
+    return response.json(user);
+});
+
+
+** IDENTIFICANDO ENTIDADES DA APLICAÇÃO
+-points(Pontos de coleta)
+    -image
+    -name
+    -email
+    -whatsapp
+    -latitude
+    -longitude
+    -city
+    -uf
+-items(Itens para coleta)
+    -image
+    -title
+-point_items(Relacionamento dos itens que um ponto coleta)
+    -point_id
+    -item_id
+Muitos para Muitos (N-N) (Pivot)
+
+// Migrations = Histórico do banco de dados
+
+// create table points
+// create table users
+
+**FUNCIONALIDADES DA APLICAÇÃO
+- Cadastro de ponto de coleta
+- Lista os itens de coleta
+- Listar pontos (filtro por estado/cidade/itens)
+- Listar um ponto de coleta específico
+
+PADRÕES DA COMUNIDADE PARA CONTROLLER:
+- index: Listagem
+- show: Exibição de um único registro
+- create(store): Criação
+- update: Atualização
+- delete(destroy): Deletar
